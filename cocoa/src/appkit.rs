@@ -18,8 +18,6 @@ use libc;
 pub use core_graphics::base::CGFloat;
 pub use core_graphics::geometry::CGPoint;
 
-pub use self::NSApplicationActivationPolicy::*;
-pub use self::NSApplicationActivationOptions::*;
 pub use self::NSBackingStoreType::*;
 pub use self::NSOpenGLPixelFormatAttribute::*;
 pub use self::NSOpenGLPFAOpenGLProfiles::*;
@@ -140,32 +138,32 @@ pub unsafe fn NSApp() -> id {
     msg_send![class!(NSApplication), sharedApplication]
 }
 
-#[repr(i64)]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NSApplicationActivationPolicy {
-    NSApplicationActivationPolicyRegular = 0,
-    NSApplicationActivationPolicyAccessory = 1,
-    NSApplicationActivationPolicyProhibited = 2,
-    NSApplicationActivationPolicyERROR = -1
+bitflags!{
+    pub struct NSApplicationActivationPolicy: NSInteger {
+        const NSApplicationActivationPolicyRegular = 0;
+        const NSApplicationActivationPolicyAccessory = 1;
+        const NSApplicationActivationPolicyProhibited = 2;
+        const NSApplicationActivationPolicyERROR = -1;
+    }
 }
 
-#[repr(u64)]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NSApplicationActivationOptions {
-    NSApplicationActivateAllWindows = 1 << 0,
-    NSApplicationActivateIgnoringOtherApps = 1 << 1
+bitflags!{
+    pub struct NSApplicationActivationOptions: NSUInteger {
+        const NSApplicationActivateAllWindows = 1 << 0;
+        const NSApplicationActivateIgnoringOtherApps = 1 << 1;
+    }
 }
 
-#[repr(u64)]
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub enum NSApplicationTerminateReply {
-    NSTerminateCancel = 0,
-    NSTerminateNow = 1,
-    NSTerminateLater = 2,
+bitflags!{
+    pub struct NSApplicationTerminateReply: NSUInteger {
+        const NSTerminateCancel = 0;
+        const NSTerminateNow = 1;
+        const NSTerminateLater = 2;
+    }
 }
 
 bitflags! {
-    pub struct NSApplicationPresentationOptions : NSUInteger {
+    pub struct NSApplicationPresentationOptions: NSUInteger {
         const NSApplicationPresentationDefault = 0;
         const NSApplicationPresentationAutoHideDock = 1 << 0;
         const NSApplicationPresentationHideDock = 1 << 1;
@@ -3530,7 +3528,7 @@ pub trait NSTabView: Sized {
     unsafe fn new(_: Self) -> id  {
         msg_send![class!(NSTabView), new]
     }
-    
+
     unsafe fn initWithFrame_(self, frameRect: NSRect) -> id;
     unsafe fn addTabViewItem_(self, tabViewItem: id);
     unsafe fn insertTabViewItem_atIndex_(self,tabViewItem:id, index:NSInteger);
